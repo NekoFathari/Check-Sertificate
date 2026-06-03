@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Sertifikat {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  nama        String
+  nama_acara  String
+  nomor_sertif String
+  asal        String
+  kab_kot     String
+  provinsi    String
+  status      String   @default("Aktif")
+  kategori    String?
+  asalType    String?   @map("asal_type")
+  posisi      String?
+  lainnya     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Report {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  email        String?
+  nomor_sertif String?
+  message      String
+  category     String   @default("other")
+  status       String   @default("open")
+  createdAt    DateTime @default(now())
+  imageData    String?
+}
+
+model SyncLog {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  status    String   @default("success")
+  source    String
+  totalRows Int
+  message   String?
+  details   String?
+  createdAt DateTime @default(now())
+}
+
+model AnalisisPeserta {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  namaAcara  String   @map("nama_acara")
+  kategori   String
+  asalType   String?  @map("asal_type")
+  count      Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model User {
+  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
+  name                  String
+  email                 String   @unique
+  password              String
+  role                  String   @default("admin")
+  theme                 String   @default("system")
+  emailNotifications    Boolean  @default(true)
+  uploadNotifications   Boolean  @default(true)
+  syncNotifications     Boolean  @default(true)
+  googleSheetsSettings  String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
